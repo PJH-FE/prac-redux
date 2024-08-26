@@ -1,24 +1,34 @@
-import { useState } from "react";
-
+import { useReducer, useState } from "react";
 import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
-import { addTodo, deleteTodo, toggleTodo } from "./redux/slice/todoSlice";
+import { taskReducer } from "./taskReducer";
 
 function App() {
+  // 인풋값 저장 state
   const [todo, setTodo] = useState("");
 
-  const todos = useSelector((state) => state.todos);
-
-  const dispatch = useDispatch();
+  // todo list reducer
+  const [todos, dispatch] = useReducer(taskReducer, []);
 
   const addEvent = () => {
-    dispatch(addTodo(todo));
+    // 추가로직
+    dispatch({
+      type: "addTodo",
+      todo: todo, // 인풋 벨류값 전달
+      id: crypto.randomUUID(), // 랜덤 ID 부여
+    });
   };
   const delEvent = (item) => {
-    dispatch(deleteTodo(item));
+    dispatch({
+      type: "deleteTodo",
+      id: item.id, // 선택한 Todo 의 ID전달
+    });
   };
+
   const toggleEvent = (item) => {
-    dispatch(toggleTodo(item));
+    dispatch({
+      type: "toggleTodo",
+      id: item.id, // 선택한 Todo 의 ID전달
+    });
   };
 
   return (
